@@ -5,3 +5,5 @@ module.exports.RabbitMQTransmitter = require("./transmitters/rabbitmq");
 
 module.exports.NerveHub = require("./NerveHub");
 module.exports.NerveTransmitter = require("./transmitters/nerve");
+
+module.exports.Nerve = require("./nerve");
