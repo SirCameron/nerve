@@ -1,5 +1,5 @@
 const BaseTransmitter = require("../transmitters/BaseTransmitter");
-const NrvTransmitter = require("../transmitters/nrv");
+const NrvTransmitter = require("../transmitters/nerve");
 const io = require("socket.io-client");
 const util = require("util");
 const { EventEmitter } = require("events");
