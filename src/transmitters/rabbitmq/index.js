@@ -134,10 +134,8 @@ class RabbitMQ extends BaseTransmitter {
   }
 
   handleIncomingDirect(nerveId, payload) {
-    if (Array.isArray(this.nerveCallbacks[nerveId])) {
-      this.nerveCallbacks[nerveId].forEach((callback) => {
-        callback(payload);
-      });
+    if (this.nerveCallbacks[nerveId]) {
+      this.nerveCallbacks[nerveId](payload);
     }
   }
 

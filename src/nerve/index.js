@@ -80,11 +80,11 @@ class Nerve extends EventEmitter {
     if (this.internalEventNames[eventName]) {
       return this.internalEventNames[eventName];
     }
-    this.internalEventNames[eventName] = [];
     this.getExternalEventNames().forEach((externalEventName) => {
+      this.internalEventNames[externalEventName] = [];
       Object.keys(this.eventConfig[externalEventName]).forEach(
         (internalEventName) => {
-          this.internalEventNames[eventName].push(internalEventName);
+          this.internalEventNames[externalEventName].push(internalEventName);
         }
       );
     });
@@ -111,13 +111,12 @@ class Nerve extends EventEmitter {
     }
     this.replyQueue[messageId] = new ReplyEmitter();
     return new Promise((res, rej) => {
-      this.replyQueue[messageId].on("reply", (message) => {
-        delete this.replyQueue[messageId];
-        message = new Event(this, message);
-        if ("error" in message.getData()) {
-          return rej(new EventError(message.getData().error));
+      this.replyQueue[messageId].on("reply", (event) => {
+        delete this.replyQueue[event.id];
+        if ("error" in event.getData()) {
+          return rej(new EventError(event.getData().error));
         }
-        return res(message);
+        return res(event);
       });
       if (timeout) {
         setTimeout(() => {
@@ -138,7 +137,8 @@ class Nerve extends EventEmitter {
     );
   }
 
-  handleIncomingDirect(event) {
+  handleIncomingDirect(payload) {
+    const event = Event.unserialize(this, payload);
     if (this.replyQueue[event.id]) {
       this.replyQueue[event.id].emitReply(event);
     }

@@ -1,13 +1,13 @@
 const uuidv4 = require("uuid/v4");
 
 class Event {
-  constructor(nerve, payload = null) {
+  constructor(nerve, payload = null, id = null) {
     if (!nerve || typeof nerve == "undefined") {
       throw new Error("Nerve is undefined");
     }
     this.nerve = nerve;
     this.payload = payload;
-    this.id = uuidv4();
+    this.id = id || uuidv4();
   }
 
   create(data) {
@@ -86,7 +86,7 @@ class Event {
 
   static unserialize(nerve, data) {
     const unserialized = JSON.parse(data);
-    return new Event(nerve, unserialized);
+    return new Event(nerve, unserialized, unserialized.id);
   }
 
   serialize() {
@@ -105,9 +105,9 @@ class Event {
     this.nerve.send(event, this.serialize());
   }
 
-  emitForResponse(event, timeout = null) {
+  emitForResponse(eventName, timeout = null) {
     this.addToCurrent({
-      event: event,
+      event: eventName,
       returnTo: {
         serviceId: this.nerve.id,
         timeout: timeout,
@@ -115,7 +115,7 @@ class Event {
     });
 
     const replyPromise = this.nerve.replyPromise(this.id, timeout);
-    this.nerve.send(event, this.serialize());
+    this.nerve.send(eventName, this.serialize());
     return replyPromise;
   }
 
@@ -137,7 +137,7 @@ class Event {
       let block = this.getBlock(i);
       if ("returnTo" in block) {
         if (!("returnedAt" in block.returnTo)) {
-          this.addReplyBlock(block, data);
+          this.addReplyBlock(block, data || {});
           return this.reply(i);
         }
       }
