@@ -17,7 +17,7 @@ amqp.connect("amqp://localhost", function (error0, connection) {
     }
     var exchange = "event";
 
-    channel.assertExchange(exchange, "direct", {
+    channel.assertExchange(exchange, "topic", {
       durable: false,
     });
 
@@ -32,7 +32,7 @@ amqp.connect("amqp://localhost", function (error0, connection) {
         }
         console.log(" [*] Waiting for logs. To exit press CTRL+C");
 
-        channel.bindQueue(q.queue, exchange, "#");
+        channel.bindQueue(q.queue, exchange, "all.#");
         // args.forEach(function (severity) {
         //   channel.bindQueue(q.queue, exchange, severity);
         // });
@@ -64,7 +64,7 @@ amqp.connect("amqp://localhost", function (error0, connection) {
         }
         console.log(" [*] Waiting for logs. To exit press CTRL+C");
 
-        channel.bindQueue(q.queue, exchange, args[0]);
+        channel.bindQueue(q.queue, exchange, args[0] + ".#");
         // args.forEach(function (severity) {
         //   channel.bindQueue(q.queue, exchange, severity);
         // });

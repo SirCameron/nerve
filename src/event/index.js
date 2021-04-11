@@ -1,6 +1,6 @@
 const uuidv4 = require("uuid/v4");
 
-class Message {
+class Event {
   constructor(nerve, payload = null) {
     if (!nerve || typeof nerve == "undefined") {
       throw new Error("Nerve is undefined");
@@ -84,11 +84,13 @@ class Message {
 
   via() {}
 
-  unserialize(data) {}
+  static unserialize(nerve, data) {
+    const unserialized = JSON.parse(data);
+    return new Event(nerve, unserialized);
+  }
 
   serialize() {
-    // return JSON.stringify(this.payload);
-    return this.payload;
+    return JSON.stringify(this.payload);
   }
 
   via(event, payload) {
@@ -174,4 +176,4 @@ class Message {
   }
 }
 
-module.exports = Message;
+module.exports = Event;

@@ -30,20 +30,10 @@ describe("Transmitter", () => {
 describe("Nerve", () => {
   it("sends and receives an event", () => {
     const testTransmitter = new TestTransmitter();
-    const service1 = new Nerve(
-      "Service1",
-      {
-        externalEvent1: { internalEvent1: {} },
-      },
-      testTransmitter
-    );
-    const service2 = new Nerve(
-      "Service2",
-      {
-        externalEvent2: { internalEvent2: {} },
-      },
-      testTransmitter
-    );
+    const service1 = new Nerve("Service1", testTransmitter);
+    const service2 = new Nerve("Service2", testTransmitter, {
+      externalEvent2: { internalEvent2: {} },
+    });
 
     let payload = null;
     service2.on("internalEvent2", (event) => {
@@ -59,20 +49,12 @@ describe("Nerve", () => {
 
   it("sends and receives a reply event", async () => {
     const testTransmitter = new TestTransmitter();
-    const service1 = new Nerve(
-      "Service1",
-      {
-        externalEvent1: { internalEvent1: {} },
-      },
-      testTransmitter
-    );
-    const service2 = new Nerve(
-      "Service2",
-      {
-        externalEvent2: { internalEvent2: {} },
-      },
-      testTransmitter
-    );
+    const service1 = new Nerve("Service1", testTransmitter, {
+      externalEvent1: { internalEvent1: {} },
+    });
+    const service2 = new Nerve("Service2", testTransmitter, {
+      externalEvent2: { internalEvent2: {} },
+    });
 
     const replyData = { bip: "boop" };
     service2.on("internalEvent2", (event) => {

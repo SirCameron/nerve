@@ -7,11 +7,15 @@ class ExampleTransmitter extends BaseTransmitter {
     this.nerveCallbacks = {};
   }
 
-  on(nerveId, eventName, callback) {
+  onReady(callback) {
+    callback();
+  }
+
+  attacheEventListener(nerveId, eventName, callback) {
     this.attachEventCallback(nerveId, eventName, callback);
   }
 
-  onDirect(nerveId, callback) {
+  attacheDirectEventListener(nerveId, callback) {
     this.attachNerveCallback(nerveId, callback);
   }
 
@@ -53,6 +57,10 @@ class ExampleTransmitter extends BaseTransmitter {
         this.eventCallbacks[eventName][nerveId](eventName, payload);
       });
     }
+  }
+
+  close() {
+    // delete attached listeners
   }
 }
 

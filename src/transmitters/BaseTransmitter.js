@@ -5,15 +5,13 @@
 class BaseTransmitter {
   constructor() {}
 
-  on(nerveId, eventName, callback) {}
+  onReady(callback) {}
 
-  onDirect(nerveId, callback) {}
+  attacheEventListener(nerveId, eventName, callback) {}
+
+  attacheDirectEventListener(nerveId, callback) {}
 
   detatch(serviceId, eventName) {}
-
-  attachEventCallback(serviceId, eventName, callback) {}
-
-  attachNerveCallback(nerveId, callback) {}
 
   /**
    * This method should fire the event into the chosen backend.
@@ -25,7 +23,7 @@ class BaseTransmitter {
 
   emitEventToNerve(nerveId, message) {}
 
-  handleIncoming(eventName, payload) {}
+  close() {}
 }
 
 module.exports = BaseTransmitter;

@@ -13,7 +13,7 @@ amqp.connect("amqp://localhost", function (error0, connection) {
     var msg = args.slice(1).join(" ") || "Hello World!";
     var severity = args.length > 0 ? args[0] : "info";
 
-    channel.assertExchange(exchange, "direct", {
+    channel.assertExchange(exchange, "topic", {
       durable: false,
     });
     channel.publish(exchange, severity, Buffer.from(msg));
