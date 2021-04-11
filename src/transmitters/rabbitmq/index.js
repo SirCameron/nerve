@@ -1,16 +1,22 @@
 var amqp = require("amqplib/callback_api");
 const BaseTransmitter = require("../BaseTransmitter");
 
+const DEFAULT_PORT = 5672;
+
 class RabbitMQ extends BaseTransmitter {
-  constructor(host) {
+  constructor(host, username, password, port = DEFAULT_PORT) {
     super();
-    amqp.connect(`amqp://${host}`, (error, connection) => {
-      if (error) {
-        throw error;
+    const credentials = username && password ? `${username}:${password}@` : "";
+    amqp.connect(
+      `amqp://${credentials}${host}:${port}`,
+      (error, connection) => {
+        if (error) {
+          throw error;
+        }
+        this.connection = connection;
+        this.createChannel();
       }
-      this.connection = connection;
-      this.createChannel();
-    });
+    );
     this.eventCallbacks = {};
     this.nerveCallbacks = {};
   }
