@@ -4,11 +4,12 @@ const BaseTransmitter = require("../BaseTransmitter");
 const DEFAULT_PORT = 5672;
 
 class RabbitMQ extends BaseTransmitter {
-  constructor(host, username, password, port = DEFAULT_PORT) {
+  constructor(host, username, password, vhost, port = DEFAULT_PORT) {
     super();
     const credentials = username && password ? `${username}:${password}@` : "";
+    const path = vhost ? `/${vhost}` : "";
     amqp.connect(
-      `amqp://${credentials}${host}:${port}`,
+      `amqp://${credentials}${host}:${port}${path}`,
       (error, connection) => {
         if (error) {
           throw error;
