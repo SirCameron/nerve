@@ -27,5 +27,8 @@ rabbitMQ.onReady(() => {
     event2.emitForResponse("second").then((response) => {
       console.log("response", response.getData());
     });
+
+    const eventNoListener = nerve1.event({ data: "second-event2" });
+    eventNoListener.emitForResponse("no-listener");
   }, 1000);
 });

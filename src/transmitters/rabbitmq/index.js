@@ -20,6 +20,7 @@ class RabbitMQ extends BaseTransmitter {
     );
     this.eventCallbacks = {};
     this.nerveCallbacks = {};
+    this.assertedExchanges = [];
   }
 
   onReady(callback) {
@@ -31,16 +32,29 @@ class RabbitMQ extends BaseTransmitter {
       if (error) {
         throw error;
       }
+
+      channel.on("error", (error) => {
+        throw error;
+      });
       this.channel = channel;
       this.onReadyCallback();
     });
   }
 
-  assertExchange(exchangeName) {
-    this.channel.assertExchange(exchangeName, "topic", {
-      durable: true,
-      autoDelete: false,
-    });
+  assertExchange(exchangeName, callback) {
+    if (exchangeName in this.assertedExchanges) {
+      return;
+    }
+    this.channel.assertExchange(
+      exchangeName,
+      "topic",
+      {
+        durable: true,
+        autoDelete: false,
+      },
+      callback
+    );
+    this.assertedExchanges.push(exchangeName);
   }
 
   assertDirectExchange(exchangeName) {
@@ -121,11 +135,9 @@ class RabbitMQ extends BaseTransmitter {
    * @param Any payload
    */
   emitEvent(eventName, payload) {
-    try {
+    this.assertExchange(eventName, () => {
       this.channel.publish(eventName, "#", Buffer.from(payload));
-    } catch (err) {
-      console.log("asdsad", err);
-    }
+    });
   }
 
   emitEventToNerve(nerveId, payload) {
