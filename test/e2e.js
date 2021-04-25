@@ -19,16 +19,14 @@ rabbitMQ.onReady(() => {
     event.next({ response: "blabla" });
   });
 
-  setTimeout(() => {
-    const event1 = nerve1.event({ data: "first-event" });
-    event1.emit("first");
+  const event1 = nerve1.event({ data: "first-event" });
+  event1.emit("first");
 
-    const event2 = nerve1.event({ data: "second-event" });
-    event2.emitForResponse("second").then((response) => {
-      console.log("response", response.getData());
-    });
+  const event2 = nerve1.event({ data: "second-event" });
+  event2.emitForResponse("second").then((response) => {
+    console.log("response", response.getData());
+  });
 
-    const eventNoListener = nerve1.event({ data: "second-event2" });
-    eventNoListener.emitForResponse("no-listener");
-  }, 1000);
+  const eventNoListener = nerve1.event({ data: "second-event2" });
+  eventNoListener.emitForResponse("no-listener");
 });
