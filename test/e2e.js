@@ -1,5 +1,5 @@
 const RabbitMQ = require("../src/transmitters/rabbitmq");
-const Nerve = require("../src/nerve");
+const Nerve = require("../src");
 
 const rabbitMQ = new RabbitMQ("localhost");
 rabbitMQ.onReady(() => {
