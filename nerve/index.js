@@ -1,9 +1,8 @@
-const BaseTransmitter = require("../transmitters/BaseTransmitter");
-const NrvTransmitter = require("../transmitters/nerve");
-const io = require("socket.io-client");
-const util = require("util");
 const { EventEmitter } = require("events");
 const uuidv4 = require("uuid/v4");
+
+const BaseTransmitter = require("../transmitters/BaseTransmitter");
+const NrvTransmitter = require("../transmitters/nerve");
 const Event = require("../event");
 
 class ReplyEmitter extends EventEmitter {
