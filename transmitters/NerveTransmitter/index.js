@@ -1,6 +1,6 @@
 const BaseTransmitter = require("../BaseTransmitter");
 
-class NrvTransmitter extends BaseTransmitter {
+class NerveTransmitter extends BaseTransmitter {
   constructor() {
     super();
     this.eventCallbacks = {};
@@ -45,4 +45,4 @@ class NrvTransmitter extends BaseTransmitter {
   }
 }
 
-module.exports = NrvTransmitter;
+module.exports = NerveTransmitter;
