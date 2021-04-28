@@ -1,8 +1,8 @@
 const { EventEmitter } = require("events");
 const uuidv4 = require("uuid/v4");
 
-const BaseTransmitter = require("../transmitters/BaseTransmitter");
-const NrvTransmitter = require("../transmitters/nerve");
+const BaseTransmitter = require("../transmitters/base-transmitter");
+const NerveTransmitter = require("../transmitters/nerve-transmitter");
 const Event = require("../event");
 
 class ReplyEmitter extends EventEmitter {
@@ -46,7 +46,7 @@ class Nerve extends EventEmitter {
     if (transmitter instanceof BaseTransmitter) {
       this.transmitter = transmitter;
     } else {
-      this.transmitter = new NrvTransmitter();
+      this.transmitter = new NerveTransmitter();
     }
     this.eventConfig = eventConfig;
 
