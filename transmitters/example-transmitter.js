@@ -1,4 +1,4 @@
-const BaseTransmitter = require("./BaseTransmitter");
+const BaseTransmitter = require("./base-transmitter");
 
 class ExampleTransmitter extends BaseTransmitter {
   constructor() {

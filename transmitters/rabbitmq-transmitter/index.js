@@ -1,5 +1,5 @@
 var amqp = require("amqplib/callback_api");
-const BaseTransmitter = require("../BaseTransmitter");
+const BaseTransmitter = require("../base-transmitter");
 
 const DEFAULT_PORT = 5672;
 
