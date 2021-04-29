@@ -1,4 +1,4 @@
-const RabbitMQ = require("../transmitters/rabbitmq");
+const RabbitMQ = require("../transmitters/rabbitmq-transmitter");
 const Nerve = require("../nerve");
 
 const rabbitMQ = new RabbitMQ("localhost");
@@ -23,10 +23,22 @@ rabbitMQ.onReady(() => {
   event1.emit("first");
 
   const event2 = nerve1.event({ data: "second-event" });
-  event2.emitForResponse("second").then((response) => {
-    console.log("response", response.getData());
-  });
+  event2
+    .emitForResponse("second", 1)
+    .then((response) => {
+      console.log("response", response.getData());
+    })
+    .catch((err) => {
+      console.log("message timed out:", err);
+    });
 
   const eventNoListener = nerve1.event({ data: "second-event2" });
-  eventNoListener.emitForResponse("no-listener");
+  eventNoListener.emitForResponse("no-listener", 2).catch(() => {
+    console.log("no-listener to respond");
+  });
+});
+
+const rabbitMQ2 = new RabbitMQ("localhost");
+rabbitMQ2.onReady(() => {
+  const nerve1 = new Nerve("login-endpoint", rabbitMQ2);
 });

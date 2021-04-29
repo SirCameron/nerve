@@ -8,34 +8,55 @@ class RabbitMQ extends BaseTransmitter {
     super();
     const credentials = username && password ? `${username}:${password}@` : "";
     const path = vhost ? `/${vhost}` : "";
-    amqp.connect(
-      `amqp://${credentials}${host}:${port}${path}`,
-      (error, connection) => {
-        if (error) {
-          throw error;
-        }
-        this.connection = connection;
-        this.createChannel();
-      }
-    );
+    this.connectionString = `amqp://${credentials}${host}:${port}${path}`;
     this.eventCallbacks = {};
     this.nerveCallbacks = {};
     this.assertedExchanges = [];
+    this.connectionAttempts = 0;
+    this.connect();
+  }
+
+  connect() {
+    amqp.connect(this.connectionString, (error, connection) => {
+      if (error) {
+        this.handleError(error);
+      }
+      this.connection = connection;
+      // this.connection.on("error", this.handleError);
+      this.createChannel();
+    });
+  }
+
+  handleError(error) {
+    if (this.connectionAttempts < 3) {
+      console.log("erer");
+      this.connect();
+      this.connectionAttempts++;
+      return;
+    }
+
+    // if (this.onErrorCallback) {
+    //   this.onErrorCallback(error);
+    // } else {
+    //   throw error;
+    // }
   }
 
   onReady(callback) {
     this.onReadyCallback = callback;
   }
 
+  onError(callback) {
+    this.onErrorCallback = callback;
+  }
+
   createChannel() {
     this.connection.createChannel((error, channel) => {
       if (error) {
-        throw error;
+        this.handleError(error);
       }
 
-      channel.on("error", (error) => {
-        throw error;
-      });
+      channel.on("error", this.handleError);
       this.channel = channel;
       this.onReadyCallback();
     });
@@ -88,7 +109,7 @@ class RabbitMQ extends BaseTransmitter {
       },
       (error, queue) => {
         if (error) {
-          throw error;
+          this.handleError(error);
         }
         this.channel.bindQueue(queue.queue, eventName, "#");
         this.channel.consume(
@@ -108,11 +129,12 @@ class RabbitMQ extends BaseTransmitter {
     this.channel.assertQueue(
       "nerve-direct",
       {
-        exclusive: true,
+        exclusive: false,
+        durable: false,
       },
       (error, queue) => {
         if (error) {
-          throw error;
+          this.handleError(error);
         }
         this.channel.bindQueue(queue.queue, "nerve-direct", nerveId);
         this.channel.consume(

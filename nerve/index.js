@@ -120,9 +120,9 @@ class Nerve extends EventEmitter {
       if (timeout) {
         setTimeout(() => {
           if (messageId in this.replyQueue) {
+            delete this.replyQueue[messageId];
             return rej(new EventError({ message: "timeout", type: "timeout" }));
           }
-          delete this.replyQueue[messageId];
         }, timeout * 1000);
       }
     });

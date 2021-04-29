@@ -7,6 +7,8 @@ class BaseTransmitter {
 
   onReady(callback) {}
 
+  onError(callback) {}
+
   attacheEventListener(nerveId, eventName, callback) {}
 
   attacheDirectEventListener(nerveId, callback) {}
