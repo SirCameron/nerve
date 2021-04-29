@@ -22,7 +22,7 @@ class RabbitMQ extends BaseTransmitter {
         this.handleError(error);
       }
       this.connection = connection;
-      // this.connection.on("error", this.handleError);
+      this.connection.on("error", this.handleError);
       this.createChannel();
     });
   }
@@ -35,11 +35,11 @@ class RabbitMQ extends BaseTransmitter {
       return;
     }
 
-    // if (this.onErrorCallback) {
-    //   this.onErrorCallback(error);
-    // } else {
-    //   throw error;
-    // }
+    if (this.onErrorCallback) {
+      this.onErrorCallback(error);
+    } else {
+      throw error;
+    }
   }
 
   onReady(callback) {
