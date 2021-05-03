@@ -19,7 +19,7 @@ class RabbitMQ extends BaseTransmitter {
   connect() {
     amqp.connect(this.connectionString, (error, connection) => {
       if (error) {
-        this.handleError(error);
+        return this.handleError(error);
       }
       this.connection = connection;
       this.connection.on("error", this.handleError);
@@ -53,7 +53,7 @@ class RabbitMQ extends BaseTransmitter {
   createChannel() {
     this.connection.createChannel((error, channel) => {
       if (error) {
-        this.handleError(error);
+        return this.handleError(error);
       }
 
       channel.on("error", this.handleError);
@@ -109,7 +109,7 @@ class RabbitMQ extends BaseTransmitter {
       },
       (error, queue) => {
         if (error) {
-          this.handleError(error);
+          return this.handleError(error);
         }
         this.channel.bindQueue(queue.queue, eventName, "#");
         this.channel.consume(
@@ -134,7 +134,7 @@ class RabbitMQ extends BaseTransmitter {
       },
       (error, queue) => {
         if (error) {
-          this.handleError(error);
+          return this.handleError(error);
         }
         this.channel.bindQueue(queue.queue, "nerve-direct", nerveId);
         this.channel.consume(
