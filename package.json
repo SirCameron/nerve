@@ -2,7 +2,7 @@
   "name": "nerve",
   "version": "0.0.1",
   "description": "",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/jest **/*.test.js",
     "node-dev": "./node_modules/nodemon/bin/nodemon.js ./node.js"
