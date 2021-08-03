@@ -13,7 +13,6 @@ class RabbitMQ extends BaseTransmitter {
     this.nerveCallbacks = {};
     this.assertedExchanges = [];
     this.connectionAttempts = 0;
-    this.connect();
   }
 
   connect() {
@@ -29,7 +28,6 @@ class RabbitMQ extends BaseTransmitter {
 
   handleError(error) {
     if (this.connectionAttempts < 3) {
-      console.log("erer");
       this.connect();
       this.connectionAttempts++;
       return;

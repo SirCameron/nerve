@@ -2,6 +2,9 @@ const RabbitMQ = require("../transmitters/rabbitmq-transmitter");
 const Nerve = require("../nerve");
 
 const rabbitMQ = new RabbitMQ("localhost");
+rabbitMQ.onError((error)=>{
+  console.log('error', error)
+})
 rabbitMQ.onReady(() => {
   const nerve1 = new Nerve("login-endpoint", rabbitMQ);
   const nerve2 = new Nerve("auth-check", rabbitMQ, {
@@ -37,8 +40,10 @@ rabbitMQ.onReady(() => {
     console.log("no-listener to respond");
   });
 });
+rabbitMQ.connect()
 
 const rabbitMQ2 = new RabbitMQ("localhost");
 rabbitMQ2.onReady(() => {
   const nerve1 = new Nerve("login-endpoint", rabbitMQ2);
 });
+rabbitMQ2.connect()
