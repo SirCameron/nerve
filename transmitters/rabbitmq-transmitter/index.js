@@ -15,23 +15,24 @@ class RabbitMQ extends BaseTransmitter {
     this.connectionAttempts = 0;
   }
 
-  connect() {
+  connect(callback) {
     amqp.connect(this.connectionString, (error, connection) => {
       if (error) {
         return this.handleError(error);
       }
       this.connection = connection;
       this.connection.on("error", this.handleError);
-      this.createChannel();
+      this.createChannel(callback);
     });
   }
 
   handleError(error) {
-    if (this.connectionAttempts < 3) {
-      this.connect();
-      this.connectionAttempts++;
-      return;
-    }
+    //retry
+    // if (this.connectionAttempts < 3) {
+    //   this.connect(retry);
+    //   this.connectionAttempts++;
+    //   return;
+    // }
 
     if (this.onErrorCallback) {
       this.onErrorCallback(error);
@@ -48,7 +49,7 @@ class RabbitMQ extends BaseTransmitter {
     this.onErrorCallback = callback;
   }
 
-  createChannel() {
+  createChannel(callback) {
     this.connection.createChannel((error, channel) => {
       if (error) {
         this.handleError(error);
@@ -56,6 +57,7 @@ class RabbitMQ extends BaseTransmitter {
 
       channel.on("error", this.handleError);
       this.channel = channel;
+      callback && callback();
       this.onReadyCallback();
     });
   }
@@ -71,9 +73,16 @@ class RabbitMQ extends BaseTransmitter {
         durable: true,
         autoDelete: false,
       },
-      callback
+      (error, ok) => {
+        if (error) {
+          return this.handleError(error, () => {
+            assertExchange(exchangeName, callback);
+          });
+        }
+        callback && callback(ok);
+        this.assertedExchanges.push(exchangeName);
+      }
     );
-    this.assertedExchanges.push(exchangeName);
   }
 
   assertDirectExchange(exchangeName) {
@@ -107,7 +116,9 @@ class RabbitMQ extends BaseTransmitter {
       },
       (error, queue) => {
         if (error) {
-          this.handleError(error);
+          this.handleError(error, () => {
+            attachIncoming(eventName);
+          });
         }
         this.channel.bindQueue(queue.queue, eventName, "#");
         this.channel.consume(
@@ -132,7 +143,9 @@ class RabbitMQ extends BaseTransmitter {
       },
       (error, queue) => {
         if (error) {
-          this.handleError(error);
+          this.handleError(error, () => {
+            attachIncomingDirect(nerveId);
+          });
         }
         this.channel.bindQueue(queue.queue, "nerve-direct", nerveId);
         this.channel.consume(
