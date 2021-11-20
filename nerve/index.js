@@ -1,5 +1,5 @@
 const { EventEmitter } = require("events");
-const uuidv4 = require("uuid/v4");
+const { v4: uuidv4 } = require("uuid");
 
 const BaseTransmitter = require("../transmitters/base-transmitter");
 const NerveTransmitter = require("../transmitters/nerve-transmitter");
