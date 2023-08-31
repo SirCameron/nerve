@@ -1,15 +1,19 @@
-const BaseTransmitter = require("./base-transmitter");
+import { EventAckCallback } from "@/types";
+import { BaseTransmitter } from "./BaseTransmitter";
 
-class ExampleTransmitter extends BaseTransmitter {
+export class ExampleTransmitter extends BaseTransmitter {
+  private eventCallbacks: Record<string, [string, EventAckCallback][]> = {};
+  private nerveCallbacks: Record<string, (event: any) => void> = {};
+
   constructor() {
     super();
-    this.eventCallbacks = {};
-    this.nerveCallbacks = {};
   }
 
   onReady(callback) {
     callback();
   }
+
+  onError(callback: (error?: Error) => void) {}
 
   attacheEventListener(nerveId, eventName, callback) {
     this.attachEventCallback(nerveId, eventName, callback);
@@ -19,16 +23,11 @@ class ExampleTransmitter extends BaseTransmitter {
     this.attachNerveCallback(nerveId, callback);
   }
 
-  // detatch(serviceId, eventName){
-  //   const key = `${serviceId}-${eventName}`
-  //   delete(this.eventCallbacks[key])
-  // }
-
-  attachEventCallback(serviceId, eventName, callback) {
+  attachEventCallback(serviceId: string, eventName: string, callback) {
     if (!this.eventCallbacks[eventName]) {
-      this.eventCallbacks[eventName] = {};
+      this.eventCallbacks[eventName] = [];
     }
-    this.eventCallbacks[eventName][serviceId] = callback;
+    this.eventCallbacks[eventName].push([serviceId, callback]);
   }
 
   attachNerveCallback(nerveId, callback) {
@@ -63,5 +62,3 @@ class ExampleTransmitter extends BaseTransmitter {
     // delete attached listeners
   }
 }
-
-module.exports = ExampleTransmitter;

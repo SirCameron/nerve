@@ -1,15 +1,19 @@
 {
   "name": "nerve",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Typed event orchestrator",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "./node_modules/.bin/jest **/*.test.js",
-    "node-dev": "./node_modules/nodemon/bin/nodemon.js ./node.js"
+    "test-e2e": "./node_modules/.bin/vitest _test/e2e/**.test.ts",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "lint": "tsc"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Cameron McAlpine",
+  "license": "Apache-2.0",
   "dependencies": {
+    "@changesets/cli": "^2.26.2",
     "amqplib": "^0.8.0",
     "command-line-args": "^5.2.0",
     "ip": "^1.1.5",
@@ -18,7 +22,11 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "@types/amqplib": "^0.10.1",
+    "nodemon": "^2.0.15",
+    "tsup": "^7.2.0",
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.2"
   },
   "nodemonConfig": {
     "ignore": [

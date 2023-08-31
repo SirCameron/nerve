@@ -1,5 +1,0 @@
-- add index with all imports and exports
-- add rabbitmq - try rather with topic again. service creates its own queue with topic id.# and all services tune to queue named after service with topic all.#
-- service names are not unique to each instance.. service id should be used instead.
-- topics also allow for enumerated queues and services
-

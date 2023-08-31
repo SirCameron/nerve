@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ESNext",
+		"module": "ES6",
+    "moduleResolution": "Node",
+    "lib": ["ESNext"],
+    "declaration": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "allowJs": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "strict": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+}
