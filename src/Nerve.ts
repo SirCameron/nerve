@@ -59,9 +59,7 @@ export class Nerve<EmitConfig extends EmitConfigInternal> extends EventEmitter {
   }
 
   private setupEvents(incommingEventFilter: string[]) {
-    console.log(incommingEventFilter);
     incommingEventFilter.map((eventName) => {
-      console.log(eventName);
       this.transmitter.attachEventListener(
         this.id,
         eventName,

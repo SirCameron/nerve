@@ -1,6 +1,6 @@
 {
-  "name": "nerve",
-  "version": "0.0.2",
+  "name": "nerve-events",
+  "version": "0.1.1",
   "description": "Typed event orchestrator",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
