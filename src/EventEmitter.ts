@@ -1,14 +1,18 @@
 import { EmitConfigInternal } from "./types";
 
-type Listener = (...args: any[]) => void;
-interface IEvents {
-  [event: string]: Listener[];
+type Listener<T> = (...args: T[]) => void;
+
+interface IEvents<EmitConfig> {
+  [event: string]: Listener<EmitConfig[keyof EmitConfig]>[];
 }
 
 export class EventEmitter<EmitConfig extends EmitConfigInternal> {
-  private readonly events: IEvents = {};
+  private readonly events: IEvents<EmitConfig> = {};
 
-  public on(event: keyof EmitConfig, listener: Listener): () => void {
+  public on(
+    event: keyof EmitConfig,
+    listener: Listener<EmitConfig[keyof EmitConfig]>
+  ): () => void {
     if (typeof this.events[event as string] !== "object") {
       this.events[event as string] = [];
     }
@@ -17,7 +21,10 @@ export class EventEmitter<EmitConfig extends EmitConfigInternal> {
     return () => this.removeListener(event, listener);
   }
 
-  public removeListener(event: keyof EmitConfig, listener: Listener): void {
+  public removeListener(
+    event: keyof EmitConfig,
+    listener: Listener<EmitConfig[keyof EmitConfig]>
+  ): void {
     if (typeof this.events[event as string] !== "object") {
       return;
     }
@@ -44,7 +51,10 @@ export class EventEmitter<EmitConfig extends EmitConfigInternal> {
     );
   }
 
-  public once(event: string, listener: Listener): () => void {
+  public once(
+    event: string,
+    listener: Listener<EmitConfig[keyof EmitConfig]>
+  ): () => void {
     const remove: () => void = this.on(event, (...args: any[]) => {
       remove();
       listener.apply(this, args);
