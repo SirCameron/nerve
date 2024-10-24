@@ -1,12 +1,14 @@
+import { EmitConfigInternal } from "./types";
+
 type Listener = (...args: any[]) => void;
 interface IEvents {
   [event: string]: Listener[];
 }
 
-export class EventEmitter {
+export class EventEmitter<EmitConfig extends EmitConfigInternal> {
   private readonly events: IEvents = {};
 
-  public on(event: string, listener: Listener): () => void {
+  public on(event: keyof EmitConfig extends string, listener: Listener): () => void {
     if (typeof this.events[event] !== "object") {
       this.events[event] = [];
     }
@@ -32,12 +34,12 @@ export class EventEmitter {
     );
   }
 
-  public emit(event: string, ...args: any[]): void {
-    if (typeof this.events[event] !== "object") {
+  public emit(event: keyof EmitConfig, ...args: any[]): void {
+    if (typeof this.events[event as string] !== "object") {
       return;
     }
 
-    [...this.events[event]].forEach((listener) => listener.apply(this, args));
+    [...this.events[event as string]].forEach((listener) => listener.apply(this, args));
   }
 
   public once(event: string, listener: Listener): () => void {

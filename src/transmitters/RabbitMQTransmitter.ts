@@ -69,7 +69,7 @@ export class RabbitMQTransmitter extends BaseTransmitter {
     }
   }
 
-  onError(callback) {
+  onError(callback: (error: Error) => void) {
     this.onErrorCallbacks.push(callback);
   }
 

@@ -1,4 +1,4 @@
-export type EmitConfigInternal = Record<any, any>;
+export type EmitConfigInternal = Record<string, any>;
 
 export type EventError = {
   message: string;

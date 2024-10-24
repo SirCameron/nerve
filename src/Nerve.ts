@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import { EmitConfigInternal, EventPayload } from "./types";
 
 class ReplyEmitter<
-  ReplyConfig extends Record<string, any>
-> extends EventEmitter {
+  ReplyConfig extends EmitConfigInternal
+> extends EventEmitter<ReplyConfig> {
   emitReply(event: ReplyConfig[keyof ReplyConfig]) {
     this.emit("reply", event);
   }
@@ -31,7 +31,9 @@ class EventError extends Error {
   }
 }
 
-export class Nerve<EmitConfig extends EmitConfigInternal> extends EventEmitter {
+export class Nerve<
+  EmitConfig extends EmitConfigInternal
+> extends EventEmitter<EmitConfig> {
   id: string;
   name: string;
   transmitter: BaseTransmitter;
@@ -122,7 +124,7 @@ export class Nerve<EmitConfig extends EmitConfigInternal> extends EventEmitter {
     ackCallback: () => void
   ) {
     this.emit(
-      eventName as string,
+      eventName,
       new Event(this as Nerve<Record<string, any>>, message, ackCallback)
     );
   }
