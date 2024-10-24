@@ -8,23 +8,23 @@ interface IEvents {
 export class EventEmitter<EmitConfig extends EmitConfigInternal> {
   private readonly events: IEvents = {};
 
-  public on(event: keyof EmitConfig extends string, listener: Listener): () => void {
-    if (typeof this.events[event] !== "object") {
-      this.events[event] = [];
+  public on(event: keyof EmitConfig, listener: Listener): () => void {
+    if (typeof this.events[event as string] !== "object") {
+      this.events[event as string] = [];
     }
 
-    this.events[event].push(listener);
+    this.events[event as string].push(listener);
     return () => this.removeListener(event, listener);
   }
 
-  public removeListener(event: string, listener: Listener): void {
-    if (typeof this.events[event] !== "object") {
+  public removeListener(event: keyof EmitConfig, listener: Listener): void {
+    if (typeof this.events[event as string] !== "object") {
       return;
     }
 
-    const idx: number = this.events[event].indexOf(listener);
+    const idx: number = this.events[event as string].indexOf(listener);
     if (idx > -1) {
-      this.events[event].splice(idx, 1);
+      this.events[event as string].splice(idx, 1);
     }
   }
 
@@ -39,7 +39,9 @@ export class EventEmitter<EmitConfig extends EmitConfigInternal> {
       return;
     }
 
-    [...this.events[event as string]].forEach((listener) => listener.apply(this, args));
+    [...this.events[event as string]].forEach((listener) =>
+      listener.apply(this, args)
+    );
   }
 
   public once(event: string, listener: Listener): () => void {
